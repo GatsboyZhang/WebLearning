@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>组和继承1</title>
+</head>
+
+<body>
+  1 组合继承是最常用的继承方式
+  // 子类的构造函数 指向父类的构造函数 并绑定一下This  就能继承父类的属性
+  // 字类的构造函数指向  父类的实例    继承父类的方法
+
+  2 存在的问题是  定义Child的原型的时候为了继承父类的方法    会实例化一下Parent构造函数  导致子类上有很多不必要的父类的属性
+  // 这样就会浪费内存  
+</body>
+<script>
+    function Parent(value) {
+        this.val = value
+    }
+
+    Parent.prototype.getValue = function () {
+        console.log(this.val)
+    }
+    // 继承父类属性
+    function Child(value) {
+        // 为什么要绑定this   因为函数隐式调用obj.fn()    this指向都是执行上下文的对象   也就是谁调用 this指向谁
+        Parent.call(this, value)
+    }
+    // 继承父类的方法     不能直接等于父类的原型   这样  字类的原型修改就会影响父类
+    // 这样的缺陷  是parent的实例身上有属性很方法   这样导致字类的原型上有了很多父类的属性  而字类的构造函数上本来就继承了父类的属性
+    // 所以浪费内存   解决思路就是  不调用父类构造函数  创建对象  使用Object.create()
+    Child.prototype = new Parent()
+
+    const child = new Child(1)
+    console.log(child)   //会多出父类的属性 val  这是子类自己已经有了   
+
+    child.getValue() // 1
+    child instanceof Parent // true
+
+    //
+</script>
+
+</html>

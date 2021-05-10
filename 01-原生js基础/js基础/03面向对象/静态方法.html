@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    看一下静态方法属于谁
+
+    静态方法是构造函数身上的方法
+</body>
+<script>
+
+    // es6的
+    class Parent {
+        constructor(value) {
+            this.val = value
+        }
+        static a() {
+            console.log(1)
+        }
+        getValue() {
+            console.log(this.val)
+        }
+    }
+
+    Parent.b = function () {
+        console.log(111)
+    }
+    class Child extends Parent {
+        constructor(value) {
+            // Parent.call(this, value)。  修正this 并且传参
+            super(value)
+        }
+    }
+    let child = new Child(1)
+    child.getValue() // 1
+    console.dir(Child)
+    console.dir(Parent)
+    // child instanceof Parent // true
+
+    Parent.a()
+    Parent.b()
+
+
+
+    // 原生的
+console.log('分割线11111111111')
+
+    function Parent2(value) {
+        this.val1 = value
+        function a(){
+            console.log(1)
+        }
+    }
+    Parent2.b=function(){
+        console.log(2)
+    }
+
+    // 设置一个只读属性 属性内容是个方法
+    Object.defineProperty(Parent2, "c", {
+            writable: false, // 这里我们writable设置为false
+            value: function(){
+                 console.log(3)
+            }
+    });
+
+    Parent2.prototype.getValue1 = function () {
+        console.log(this.val1)
+    }
+
+    const child2=new Parent2()
+
+    console.dir(Parent2)
+    Parent2.c()
+</script>
+
+</html>

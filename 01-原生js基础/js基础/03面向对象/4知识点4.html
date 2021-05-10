@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+
+<body>
+</body>
+	1 JavaScript不区分类和实例的概念，所有对象都是实例, 通过原型（prototype）来实现面向对象编程。
+	2 所谓继承关系不过是把一个对象的原型指向另一个对象而已。
+	3 JavaScript对每个创建的对象都会设置一个原型，指向它的原型对象。
+	4 因为构造函数里面的this是新对象 所以 新对象会有构造函数的属性 但是原型对象身上 只有构造函数和一些方法
+	5 constructor里面定义了一些属性通过this.属性挂载到了实例身上 
+	 原型对象还定义了很多方法 跟constructor是并列的   但是原型身上是没有实例身上的属性的  
+
+	6 所以新对象继承了原型对象的属性可以从constructor里面找 继承的方法可以从与constructor并列的方法里面去找
+	7 所以 看一个对象有哪些属性的时候 除了看看它除了自身定义的属性 还要看看它继承的属性
+
+	8 函数的调用是在某个对象上触发的，即调用位置上存在上下文对象 此时的this指向的就是调用方 
+	 // 所以constructor就是通过this.属性 把属性挂载到了实例身上
+
+	9 每一个闭包结束一定要打分号 不然下面的执行不了
+
+<script>
+
+	(function () {
+		var Student = {
+			name1: 'Robot',
+			height: 1.6,
+			run: function () {
+				console.log(this.name + ' is running...');
+			}
+		};
+
+		// 查看Student的原型链-----object
+		// 会发现没有  Student.__proto__.__proto__   因为 已经是顶层的Object对象了  所以此时没有原型对象的原型对象
+		// var Student=new Object();   跟上面字面量创建的效果是一样的   constructor函数是Object()
+		// 就想象成第二种写法  会好理解一点  Object顶层对象的内容是固定的
+		console.log(Student);
+
+
+		// 创建一个xiaoming对象
+		var xiaoming = {
+			name2: '小明'
+		};
+		// 查看xiaoming最初的原型链  ----object
+		//console.log(xiaoming)
+
+		// 把小明的原型对象指向了Student对象   ,xiaoming就继承了原型的属性和方法
+		// 疑问:  从打印的内容看到为什么 xiaoming没有从原型身上获得一个constructor属性  我觉得可能是因为xiaoming是一个json对象 不是函数对象  所以没有构造函数
+		// 关于这一点可以看看知识点5.html
+		xiaoming.__proto__ = Student
+		console.log(xiaoming.__proto__.constructor)   // 等于Object   打印的时候看不到  因为直接指定的原型
+		console.log(xiaoming.constructor)    // 打印的时候看不到  因为直接指定的原型
+		console.log(xiaoming)
+		console.log(xiaoming.name1)  // 继承了原型身上的name1属性  先从自己身上找 找不到从原型身上找
+	})();
+
+
+
+	console.log(111111111111111111111111111111);
+	// 每一个闭包结束一定要打分号  不然下面的执行不了
+
+	(function () {
+		// 在JavaScrip代码运行时期，你可以把xiaoming从Student变成Bird，或者变成任何对象。
+		//  把xiaoming 的原型对象指向Brid对象  ,xiaoming就继承了Brid的属性和方法  跟Student无关了
+		var Bird = {
+			fly: function () {
+				console.log(this.name + ' is flying...');
+			}
+		};
+
+		var xiaoming = {
+			name: '小明'
+		};
+
+		xiaoming.__proto__ = Bird;
+		console.log(xiaoming)
+	})();
+
+
+	console.log(2222222222222222222222222)
+</script>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		1 繆雪峰老师说 JavaScript的所有数据都可以看成对象
+		2 constructor里面定义了一些属性通过this.属性挂载到了实例对象身上 原型对象还定义了很多方法 跟constructor是并列的
+		3 新对象继承了原型对象的属性可以从constructor里面找 继承的方法可以从与constructor并列的方法里面去找
+		4 arr.constructor===Array
+		5 直接字面量赋值的方式 arr=[] 本质也是new出来的
+		6 对一个对象做精准的类型检查  因为arr 和 json 被typeOf出来的都是object  不够细致
+		function isArray(val) {
+		var isTrue = typeof val == 'object' && val.constructor == Array;
+		return isTrue ? true : false;
+		}
+	</body>
+	<script>
+		// 繆雪峰老师说  JavaScript的所有数据都可以看成对象   
+		
+		//  理解一下 constructor属性
+		
+		//  constructor里面定义了一些属性通过this.属性挂载到了实例对象身上  原型对象还定义了很多方法 跟constructor是并列的
+		//  所以新对象继承了原型对象的属性可以从constructor里面找   继承的方法可以从与constructor并列的方法里面去找
+		var obj = {};
+		console.log(obj)
+		console.log(obj.constructor) //ƒ Object() { [native code] }  指向原始的Object函数
+		console.log(obj.constructor == Object) //true
+		
+		var obj1=new Object();
+		console.log(obj1);
+	    console.log(obj1.constructor) //ƒ Object() { [native code] }  指向原始的Object函数
+		console.log(obj1.constructor == Object) //true
+		
+		//   上面两种形式相等  同时打印发现   Object是最顶层的构造函数   obj.__proto__.__proto__是没有的  
+		
+
+		var arr = [];
+		console.log(arr)
+		console.log(arr.constructor) //ƒ Array() { [native code] }   指向原始的Array函数
+		console.log(arr.constructor == Array) //true
+		//   var  arr2=new Array()   通过new关键字调用一个普通函数,并返回一个新对象   Array()就从普通函数变成构造函数
+		//  用new的方式  就很好理解  arr.constructor===Array
+		// 直接字面量赋值的方式  arr=[]  本质也是new出来的  
+		var arr1=new Array();
+		console.log(arr1)
+		console.log(arr1.constructor)
+		console.log(arr1.constructor===Array)
+
+// 上面发现  arr1.__proto__.__proto__===Object    Object是最顶层的构造函数 里面定义了很多属性
+
+		function Fun() {
+			console.log('function');
+		}
+		var fun = new Fun(); //实例化
+		console.log(fun.constructor )//ƒ Fun(){console.log('function')}    【打印出来的引用是Fun函数，说明fun的引用是Fun函数】
+		console.log(Fun.constructor) //ƒ Function() { [native code] }      【打印出来的引用是Funcion函数，说明Fun的引用是Function函数】
+		console.log(fun.constructor == Fun) //true    【再次证明fun的constructor属性引用了fun对象的构造函数】
+		console.log(fun.constructor == Fun.constructor) //false   后者的构造函数  指向原始的Function函数
+
+
+		//constructor的用法   精准的判断对象数据类型
+		console.log(typeof(obj))   // Object类型
+		console.log(typeof(arr))   // Object 类型
+		//  所以光使用typeOf查看类型是不准确的  利用构造函数再做一层的判断		
+		function isArray(val) {
+			var isTrue = typeof val == 'object' && val.constructor == Array;
+			return isTrue ? true : false;
+		}
+		var arr = isArray([1, 2, 3, 4, 5]);
+		console.log(arr); //true
+	</script>
+</html>

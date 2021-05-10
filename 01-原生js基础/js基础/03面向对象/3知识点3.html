@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		1 普通函数如果用关键字new来调用这个函数，并返回一个对象 这个普通函数就是一个构造函数
+		2 如果这个构造函数的返回值不是一个函数或者 具体的对象 ，它绑定的this就指向新创建的对象，并默认返回this
+		3 用new Student()创建的对象还从原型上获得了一个constructor属性，它指向构造函数Student本身：
+	</body>
+
+	<script>
+		function Student(name) {
+			this.name = name;
+			this.hello = function() {
+				alert('Hello, ' + this.name + '!');
+			}
+		}
+		// 普通函数如果用关键字new来调用这个函数，并返回一个对象  这个普通函数就是一个构造函数  
+		// 如果这个构造函数的返回值不是一个函数或者 具体的对象 ，它绑定的this就指向新创建的对象，并默认返回this
+		var xiaoming = new Student('小明');
+		console.log(typeof(xiaoming))  // 类型是对象
+		console.log(xiaoming) //
+		console.log( typeof(Student)) // 类型依然是函数
+		console.log( Student )  // 打印出来是一块具体的函数代码 
+		
+		
+		// console.log('现在来看具体的分析')
+		//  查看一下 xiaoming的原型链  xiaoming的原型指向函数Student的原型
+		
+		 
+		 // 原型对象身上的constructor属性指向构造函数Student本身，constructor属性身上又有个prototype又指向原型对象本身
+			console.log(xiaoming.__proto__) // 这是小明的原型对象
+			console.log(xiaoming.__proto__.constructor===Student) // 这是小明的原型对象身上的constructor属性  指向构造函数Student本身
+			 console.log(xiaoming.__proto__.constructor.prototype===xiaoming.__proto__)  // 构造函数身上又有 prototype属性  指回原型对象本身  
+			 console.log(Student.prototype===xiaoming.__proto__)  // 所以构造函数身上的prototype属性就是小明的原型
+		 
+			
+			 console.log('xiaoming的原型对象身上有个constructor属性指向构造函数Student本身------'+(xiaoming.__proto__.constructor===Student)) 
+			  console.log('构造函数身上的prototype属性指回原型本身，因此xiaoming的原型对象 就是Student.prototype------'+ (xiaoming.__proto__===Student.prototype))
+	    //  由于__proto__ 属于隐式属性   不要直接拿出来用    所以 要查看小明的原型对象  直接用  构造函数身上的prototype
+		
+	    console.log('原型对象自己有个属性constructor指向构造函数Student本身-------'+(Student.prototype.constructor===Student)) 
+		
+		console.log(' 继续查看原型对象的原型对象   发现是object.prototype    Object是最终的构造函数')
+		console.log(xiaoming.__proto__.__proto__)
+		console.log(Student.prototype.__proto__)
+		console.log(Student.prototype.__proto__===Object.prototype)
+		
+		
+		 // 所以小明的原型链是
+		console.log('所以小明的原型链是  xiaoming---Student.prototype---Object.prototype') 
+		
+		
+		// 总结
+		// Student.prototype指向的对象就是xiaoming的原型对象，  也就是  xiaoming的原型 就是Student.prototype
+		//  这个原型对象自己还有个属性constructor，指向Student函数本身。
+		// 用new Student()创建的对象还从原型上获得了一个constructor属性，它指向构造函数Student本身：
+		// 也就是  xiaoming的构造函数是Student
+		console.log(Student.prototype.constructor===Student)  // true
+		console.log(xiaoming.constructor === Student)  // true
+		console.log(xiaoming.__proto__.constructor === xiaoming.constructor )  // true
+		console.log(xiaoming.constructor === Student.prototype.constructor===Student)  //false
+
+		
+		
+		console.log(Student.prototype.constructor)  // true
+		console.log(xiaoming.constructor)  // true
+		console.log(Student)  // true
+		
+			
+		
+
+		
+		
+		//  下面测试一下  Student改变以后  xiaoming会不会变化
+		setTimeout(function(){
+				Student.prototype.a=function(){
+					console.log('111');
+				} 
+				
+				console.log(xiaoming)
+		},5000)
+		
+		//打印发现 5秒后  xiaoming也会变化
+		// 如果不加定时器    第一次打印也会由a这个方法
+		// 这发现    xiaoming 这个对象   所谓继承关系不过是把一个对象的原型指向另一个对象而已。  所以Student.prototype改变了  xiaoming 也改变了
+		
+		
+		
+		
+		
+	</script>
+</html>

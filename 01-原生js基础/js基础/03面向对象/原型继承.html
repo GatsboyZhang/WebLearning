@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>回归一下原型继承</title>
+</head>
+<body>
+1 首先要明确 js会为每个创建的对象都设置一个原型   打印arr 或者function的时候可以看到 _proto_（隐式原型）属性 就是指向其原型对象 
+// arr---Array.prototye---Object.prototy--null               Array是原生js自己提供的构造函数
+// foo ----> Function.prototype ----> Object.prototype--null      Function也是原生js自己提供的构造函数 
+
+1.1 js创建对象的方式
+    1 直接赋值   obj={}
+    2 通过构造函数   new fn()
+    3 使用 Object.create()
+    4 使用 new Object()
+
+2 通过构造函数创建对象  构造函数  原型 实例之间的关系   
+    1 定义一个构造函数
+    2 使用new关键字调用这个构造函数并返回一个实例
+    3 实例身上有个属性_proto_指向 原型对象          一般方法写在原型上
+    4 原型对象身上有个constructor 指向构造函数      一般属性写在构造函数上
+    5 构造函数身上有个prototype又指回原型本身 
+2.1 为什么要有构造函数
+    构造函数是用来初始化对象为已知的初始状态 ,
+    毕竟要创建多个相同类型的对象的实例,为每个实例单独进行属性分配,相当繁琐,容易出错
+    希望在一个地方将这些对象的属性和方法整合为一个类
+    一般都是把属性写在构造函数里面  方法写在原型身上
+2.1 构造函数精准的判断数据类型
+    function isArray(val) {
+    var isTrue = typeof val == 'object' && val.constructor == Array;
+    return isTrue ? true : false;
+    }
+
+3 查看New的过程做了什么
+ new myFunction {
+  var obj = {};
+  obj.__proto__ = myFunction.prototype;
+  var result = myFunction.call(obj, "Li", "Cherry");
+  return typeof result === 'obj' ? result : obj;
+ }
+ 创建一个空对象 obj;
+ 将新创建的空对象的隐式原型指向其构造函数的显示原型。
+ 并且执行了一下构造函数 并对构造函数使用 call 绑定了 this  并且传参
+ 如果无返回值或者返回一个非对象值，则将 obj 返回作为新对象；如果返回值是一个新对象的话那么直接直接返回该对象。
+
+4 原型链就是多个对象通过_proto连接起来了   实例要使用某个属性或者方法 先在自己身上找 找不到就一层层的顺着原型链找  
+5 原型链的顶端是Object对象
+
+6 Js不区分类和实例的概念，所有对象都是实例, 通过原型（prototype）来实现面向对象编程。
+7 所谓继承关系不过是把一个对象的原型指向另一个对象而已
+8 看一个对象有哪些属性的时候 除了看看它除了自身定义的属性 还要看看它继承的属性
+</body>
+
+<script>
+    // 实现继承的方式一
+    // 最粗暴的是直接将B函数的原型指向另外一个构造函数A的原型
+    // 坏处是会互相影响    比如我在B的原型上加方法  会影响到A 的原型  
+
+    // 实现继承的方式二   寄生组合   关键就是拷贝一份原型的引用 
+    // 现在有构造函数A 和B  想让B继承自A     
+    // 定义一个空对象C 让C的原型指向A的原型  
+    // 让B的原型 指向C的实例
+    // 修复一下B的构造函数  constructor指向自己    因为之前只是在设置原型并没有设置构造函数  所以这里要指向一下
+    // 这样我再在B的原型上加方法就不会影响到A的原型了
+    // 它的原理是  c的实例  不会影响A 的原型  
+
+    // 
+
+
+</script>
+</html>

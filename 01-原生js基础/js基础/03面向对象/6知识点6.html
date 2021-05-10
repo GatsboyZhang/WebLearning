@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		1 下面这种是寄生组合继承的方式：核心是复制了一份 被继承者的原型
+
+		2  让对象C继承对象A  
+		    2.0 定义构造函数C 执行一遍A 的构造函数  并使用call修正一下this   这样做是为了继承A的属性
+			2.1 创建一个空对象B  让B的原型指向A的原型  注意是A的原型  所以只有A的方法
+			2.2 让C的原型指向B的实例   这样原型身上就有了 A 的方法
+			2.3 修复C的原型的构造函数  让它指向C
+
+		3 上面这种做法 比直接将C的原型指向A 的原型好   原因是  c的原型改变不会影响A 两个原型是独立的
+
+		4  如果直接把C 的原型 指向A 的实例   这种是组合继承
+		   由于 C 对象 已经通过A 的构造函数 继承了A 的属性   它的原型身上不需要A 的构造函数的属性  只需要A 的原型的方法
+		   所以  这样造成了内存的滥用
+
+		5  所以组合继承需要解决一下   继承方法的时候  不要再去继承一遍属性了
+
+		6 可以运行一下下面的代码  看看 PrimaryStudent的原型上是不是多了很多没有 必要的属性
+		  需要理解一下的是  一般都把属性写在构造函数上  方法写在原型上  但是其实原型上也是可以写属性的  
+		  继承分继承属性  继承方法两个过程
+
+			
+	</body>
+	<script>
+		// 继承
+		function Student(props) {
+			this.name = props.name || 'Unnamed';
+		}
+
+		Student.prototype.hello = function () {
+			alert('Hello, ' + this.name + '!');
+		}
+		
+		// 定义PrimaryStudent函数
+		function PrimaryStudent(props) {
+			// 调用Student构造函数，绑定this变量:
+			Student.call(this, props);
+			this.grade = props.grade || 1;
+		}
+		//必须想办法把原型链修改为： 原型链对了，继承关系就对了
+		// new PrimaryStudent() ----> PrimaryStudent.prototype ----> Student.prototype ----> Object.prototype ----> null
+		
+				// 空函数F:
+		function F() {
+		}
+
+		// 把F的原型指向Student.prototype:
+		F.prototype = Student.prototype;
+		
+		// 把PrimaryStudent的原型指向一个新的F对象，F对象的原型正好指向Student.prototype:
+		//  这里只有方法  没有属性  所以只继承了方法
+		PrimaryStudent.prototype = new F();
+		
+		// 把PrimaryStudent原型的构造函数修复为PrimaryStudent:
+        PrimaryStudent.prototype.constructor = PrimaryStudent;
+		
+		// 继续在PrimaryStudent原型（就是new F()对象）上定义方法：
+		PrimaryStudent.prototype.getGrade = function () {
+			return this.grade;
+		};
+		
+		// 创建xiaoming:
+		var xiaoming = new PrimaryStudent({
+			name: '小明',
+			grade: 2
+		});
+		//xiaoming.name; // '小明'
+		//xiaoming.grade; // 2
+		
+		// 验证原型:
+		console.log(xiaoming.__proto__ === PrimaryStudent.prototype); // true
+		console.log(xiaoming.__proto__.__proto__ === Student.prototype); // true
+
+		// 验证继承关系:
+		console.log(xiaoming instanceof PrimaryStudent); // true
+		console.log(xiaoming instanceof Student); // true
+
+
+		console.log(xiaoming)
+	</script>
+</html>

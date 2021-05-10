@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>es6继承</title>
+</head>
+
+<body>
+    1 es6的继承 使用关键字 extends 实现的结果跟寄生组和继承一样
+    // 不会出现字类多出很多父类的属性
+    // super 相当于执行了 Parent.call(this, value)。
+</body>
+<script>
+    class Parent {
+        constructor(value) {
+            this.val = value
+        }
+        getValue() {
+            console.log(this.val)
+        }
+    }
+    class Child extends Parent {
+        constructor(value) {
+            // Parent.call(this, value)。  修正this 并且传参
+            super(value)
+        }
+    }
+    let child = new Child(1)
+    child.getValue() // 1
+    console.log(child)
+   // child instanceof Parent // true
+</script>
+
+</html>

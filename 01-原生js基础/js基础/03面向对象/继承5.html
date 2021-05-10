@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>如何实现继承两个类</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    function Parent1(value) {
+        this.val1 = value
+    }
+
+    Parent2.prototype.getValue1 = function () {
+        console.log(this.val1)
+    }
+
+    function Parent2(value) {
+        this.val2 = value
+    }
+
+    Parent2.prototype.getValue2 = function () {
+        console.log(this.val2)
+    }
+
+    // 实现 继承 上面两个类
+    function Child(value) {
+        // 为什么要绑定this   因为函数隐式调用obj.fn()    this指向都是执行上下文的对象   也就是谁调用 this指向谁
+        Parent1.call(this, value)
+        Parent2.call(this, value)
+    }
+
+    Child.prototype = Object.create(Parent.prototype, {
+        constructor: {
+            value: Child,
+            enumerable: false,
+            writable: true,
+            configurable: true
+        }
+    })
+
+    // function extend(obj1, arr) {
+
+    // }
+</script>
+
+</html>
